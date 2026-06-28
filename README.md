@@ -50,7 +50,7 @@ where $k = 2\pi/\lambda$ is the wavenumber of the initial perturbation.
 | Interface scheme | MULES-corrected `vanLeer` |
 | Time discretisation | Euler (1st-order implicit) |
 | Courant limit | Co_max = 0.3, AlphaCo_max = 0.3 |
-| Simulated time | 5 s |
+| Simulated time | 10 s |
 | Write interval | 0.02 s (250 frames) |
 
 ### Fluid Properties
