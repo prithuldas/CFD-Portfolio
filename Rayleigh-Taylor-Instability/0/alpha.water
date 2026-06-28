@@ -1,0 +1,65 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2512                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      alpha.water;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// ADDED: The dimensions line is required here!
+dimensions      [0 0 0 0 0 0 0];
+
+internalField   #codeStream
+{
+    codeInclude
+    #{
+        #include "fvCFD.H"
+    #};
+    codeOptions
+    #{
+        -I$(LIB_SRC)/finiteVolume/lnInclude \
+        -I$(LIB_SRC)/meshTools/lnInclude
+    #};
+    codeLibs
+    #{
+        -lfiniteVolume -lmeshTools
+    #};
+    code
+    #{
+        const IOdictionary& d = static_cast<const IOdictionary&>(dict);
+        const fvMesh& mesh = refCast<const fvMesh>(d.db());
+
+        scalarField alpha(mesh.nCells(), 0.0);
+        const vectorField& C = mesh.C();
+
+        forAll(alpha, cI)
+        {
+            const scalar x = C[cI].x();
+            const scalar y = C[cI].y();
+            const scalar yI = 2.0 + 0.05*Foam::cos(2.0*Foam::constant::mathematical::pi*x);
+            alpha[cI] = (y > yI) ? 1.0 : 0.0;
+        }
+        
+        // FIXED: We must explicitly tell OpenFOAM this is a nonuniform list
+        os << "nonuniform List<scalar> " << nl << alpha;
+    #};
+};
+
+boundaryField
+{
+    top         { type inletOutlet; inletValue uniform 0; value uniform 0; }
+    bottom      { type zeroGradient; }
+    left        { type zeroGradient; }
+    right       { type zeroGradient; }
+    frontAndBack { type empty; }
+}
+
+// ************************************************************************* //
