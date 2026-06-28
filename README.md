@@ -151,8 +151,3 @@ Visualize `alpha.water` in ParaView. The four stages visible in the simulation:
 - OpenFOAM ESI Documentation: https://www.openfoam.com/documentation
 
 ---
-
-## Author
-
-**Prithul** — Mechanical Engineering, AUST | AASML Co-founder  
-CFD Portfolio: [github.com/yourhandle](https://github.com/yourhandle)
